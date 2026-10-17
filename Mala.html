@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PulseSocial - Complete Modern Platform</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f3ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            dark: {
+              950: '#06070a',
+              900: '#0b0d14',
+              800: '#131722',
+              700: '#1c2230',
+              600: '#2a3346'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Scrollbar Styling */
+    .scrollbar-none::-webkit-scrollbar { display: none; }
+    .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+
+    /* Mobile Chat Panel Animations */
+    @media (max-width: 767px) {
+      .mobile-panel { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform; }
+      .mobile-panel-hidden-left { transform: translateX(-100%); }
+      .mobile-panel-hidden-right { transform: translateX(100%); }
+      .mobile-panel-visible { transform: translateX(0); }
+    }
+
+    /* Pop Animation */
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.96) translateY(6px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .animate-pop { animation: popIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+    @keyframes pulseRing {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+      70% { transform: scale(1.04); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+    .recording-pulse { animation: pulseRing 1.4s infinite; }
+
+    /* Instagram-Style Story Gradient Circles (Exact 64px x 64px) */
+    .insta-story-ring {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      padding: 2.5px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      flex-shrink: 0;
+    }
+
+    .insta-story-circle-add {
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      padding: 2.5px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      flex-shrink: 0;
+    }
+
+    .insta-story-inner-img {
+      width: 58px;
+      height: 58px;
+      border-radius: 9999px;
+      object-fit: cover;
+      border: 2px solid #0b0d14;
+    }
+
+    /* Glassmorphism styling */
+    .glass-card {
+      background: rgba(19, 23, 34, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body class="font-sans bg-dark-950 text-slate-100 h-screen w-screen overflow-hidden antialiased select-none">
+
+  <!-- ==================== MAIN PLATFORM LAYOUT ==================== -->
+  <div class="flex h-full w-full relative overflow-hidden bg-dark-950">
+
+    <!-- ==================== DESKTOP SIDEBAR NAVIGATION ==================== -->
+    <aside class="hidden lg:flex flex-col justify-between w-64 py-5 px-4 bg-dark-900 border-r border-dark-700/60 z-30 flex-shrink-0">
+      <div class="space-y-6">
+        <!-- Brand Logo -->
+        <div class="flex items-center gap-3 px-2 cursor-pointer" onclick="switchMainTab('feed')">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-600 via-indigo-500 to-purple-500 flex items-center justify-center text-white font-extrabold text-xl shadow-lg shadow-brand-500/25">
+            ⚡
+          </div>
+          <div>
+            <h1 class="text-base font-extrabold tracking-tight text-white flex items-center gap-1.5">
+              PulseSocial
+            </h1>
+            <p class="text-[10px] text-brand-500 font-semibold tracking-wider uppercase">Live Platform</p>
+          </div>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="space-y-1">
+          <button onclick="switchMainTab('feed')" id="desk-nav-feed" class="desk-nav-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-xs bg-brand-600 text-white shadow-md shadow-brand-600/20 transition-all">
+            <i class="fa-solid fa-house text-sm"></i> Home Feed
+          </button>
+
+          <button onclick="switchMainTab('chat')" id="desk-nav-chat" class="desk-nav-btn w-full flex items-center justify-between px-4 py-3 rounded-2xl font-semibold text-xs text-slate-400 hover:bg-dark-800 hover:text-slate-100 transition-all">
+            <div class="flex items-center gap-3.5">
+              <i class="fa-solid fa-comments text-sm"></i> Messages
+            </div>
+            <span class="px-2 py-0.5 text-[10px] bg-brand-600/20 text-brand-400 font-bold rounded-full">3</span>
+          </button>
+
+          <button onclick="switchMainTab('explore')" id="desk-nav-explore" class="desk-nav-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-semibold text-xs text-slate-400 hover:bg-dark-800 hover:text-slate-100 transition-all">
+            <i class="fa-solid fa-compass text-sm"></i> Explore
+          </button>
+
+          <button onclick="switchMainTab('notifications')" id="desk-nav-notifications" class="desk-nav-btn w-full flex items-center justify-between px-4 py-3 rounded-2xl font-semibold text-xs text-slate-400 hover:bg-dark-800 hover:text-slate-100 transition-all">
+            <div class="flex items-center gap-3.5">
+              <i class="fa-solid fa-bell text-sm"></i> Notifications
+            </div>
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          </button>
+
+          <button onclick="switchMainTab('my-profile')" id="desk-nav-my-profile" class="desk-nav-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-semibold text-xs text-slate-400 hover:bg-dark-800 hover:text-slate-100 transition-all">
+            <i class="fa-solid fa-user text-sm"></i> My Profile
+          </button>
+        </nav>
+      </div>
+
+      <!-- Current User Profile Footer Card -->
+      <div class="pt-4 border-t border-dark-700/60 flex items-center justify-between">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="switchMainTab('my-profile')">
+          <div class="relative">
+            <img id="sidebarUserAvatar" src="" class="w-10 h-10 rounded-2xl object-cover ring-2 ring-brand-500/40">
+            <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-dark-900 rounded-full"></span>
+          </div>
+          <div class="overflow-hidden max-w-[110px]">
+            <h4 id="sidebarUserName" class="text-xs font-bold text-slate-100 truncate">Loading...</h4>
+            <p id="sidebarUserHandle" class="text-[10px] text-slate-400 truncate">@handle</p>
+          </div>
+        </div>
+
+        <button onclick="openEditProfileModal()" class="p-2 rounded-xl bg-dark-800 hover:bg-brand-600/20 text-slate-300 hover:text-brand-400 transition-colors" title="Edit Profile">
+          <i class="fa-solid fa-pen-to-square text-xs"></i>
+        </button>
+      </div>
+    </aside>
+
+
+    <!-- ==================== MAIN CONTENT AREA ==================== -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+
+      <!-- MOBILE TOP HEADER BAR -->
+      <header class="lg:hidden h-14 bg-dark-900/90 backdrop-blur-md border-b border-dark-700/60 px-4 flex items-center justify-between z-30 flex-shrink-0">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="switchMainTab('feed')">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white font-extrabold text-sm">
+            ⚡
+          </div>
+          <span class="text-sm font-extrabold text-white tracking-tight">PulseSocial</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="switchMainTab('chat')" class="relative p-2 rounded-xl bg-dark-800 text-slate-300">
+            <i class="fa-solid fa-comments text-xs"></i>
+            <span class="absolute top-1 right-1 w-2 h-2 bg-brand-500 rounded-full"></span>
+          </button>
+          
+          <div class="cursor-pointer" onclick="switchMainTab('my-profile')">
+            <img id="mobileHeaderUserAvatar" src="" class="w-8 h-8 rounded-xl object-cover ring-2 ring-brand-500/40">
+          </div>
+        </div>
+      </header>
+
+
+      <!-- ==================== VIEW 1: HOME FEED ==================== -->
+      <section id="page-feed" class="main-page flex-1 overflow-y-auto flex justify-center p-3 sm:p-5 lg:p-6">
+        <div class="w-full max-w-2xl space-y-5 pb-20 lg:pb-6">
+          
+          <!-- INSTAGRAM-STYLE CIRCULAR STORIES BAR -->
+          <div class="glass-card py-3.5 px-4 rounded-3xl overflow-hidden">
+            <div class="flex items-center justify-between mb-3 px-1">
+              <span class="text-xs font-extrabold text-slate-200 tracking-wide flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-play text-brand-500"></i> Stories
+              </span>
+              <span class="text-[10px] font-semibold text-brand-500 cursor-pointer hover:underline" onclick="showToast('Archive viewed')">Archive</span>
+            </div>
+
+            <div class="flex items-center gap-4 overflow-x-auto pb-1 scrollbar-none">
+              <!-- Add My Story Circle -->
+              <div onclick="showToast('Story uploader opened')" class="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer group">
+                <div class="insta-story-circle-add group-hover:scale-105 transition-transform shadow-md">
+                  <div class="w-[58px] h-[58px] rounded-full bg-dark-900 flex flex-col items-center justify-center text-brand-400 border-2 border-dark-900">
+                    <i class="fa-solid fa-plus text-sm"></i>
+                  </div>
+                </div>
+                <span class="text-[10px] font-semibold text-slate-300 truncate max-w-[64px] text-center">Your story</span>
+              </div>
+
+              <!-- Other Circular Stories -->
+              <div onclick="openStoryViewer('alex')" class="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer group">
+                <div class="insta-story-ring group-hover:scale-105 transition-transform shadow-md">
+                  <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80" class="insta-story-inner-img">
+                </div>
+                <span class="text-[10px] font-semibold text-slate-200 truncate max-w-[64px] text-center">alex_dev</span>
+              </div>
+
+              <div onclick="openStoryViewer('elena')" class="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer group">
+                <div class="insta-story-ring group-hover:scale-105 transition-transform shadow-md">
+                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80" class="insta-story-inner-img">
+                </div>
+                <span class="text-[10px] font-semibold text-slate-200 truncate max-w-[64px] text-center">elena</span>
+              </div>
+
+              <div onclick="openStoryViewer('sophia')" class="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer group">
+                <div class="insta-story-ring group-hover:scale-105 transition-transform shadow-md">
+                  <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80" class="insta-story-inner-img">
+                </div>
+                <span class="text-[10px] font-semibold text-slate-200 truncate max-w-[64px] text-center">sophia_c</span>
+              </div>
+
+              <div onclick="openStoryViewer('marcus')" class="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer group">
+                <div class="p-[2.5px] bg-dark-700 rounded-full group-hover:scale-105 transition-transform w-[64px] h-[64px] flex items-center justify-center flex-shrink-0">
+                  <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100&auto=format&fit=crop&q=80" class="insta-story-inner-img opacity-75">
+                </div>
+                <span class="text-[10px] font-semibold text-slate-400 truncate max-w-[64px] text-center">marcus_v</span>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- CREATE NEW POST BOX -->
+          <div class="glass-card p-4 rounded-3xl space-y-3">
+            <div class="flex items-center gap-3">
+              <img id="feedPostCreatorAvatar" src="" class="w-10 h-10 rounded-2xl object-cover ring-2 ring-brand-500/30">
+              <input type="text" id="postInputText" placeholder="What's happening on your mind?" class="flex-1 bg-dark-800/80 border border-dark-700 text-xs sm:text-sm text-slate-100 placeholder-slate-500 px-4 py-2.5 rounded-2xl focus:outline-none focus:border-brand-500 transition-all">
+            </div>
+
+            <!-- Attachment Preview -->
+            <div id="postAttachmentPreview" class="hidden relative rounded-2xl overflow-hidden border border-dark-700 bg-dark-900">
+              <img id="postAttachmentImg" class="w-full h-48 object-cover">
+              <button onclick="removePostAttachment()" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/70 text-white flex items-center justify-center text-xs">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <!-- Voice Post Recording Bar -->
+            <div id="postVoiceRecorderBar" class="hidden px-3 py-2 bg-red-950/40 border border-red-800/40 rounded-2xl flex items-center justify-between text-xs text-red-200">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-red-500 recording-pulse"></span>
+                <span class="font-bold">Recording Voice Post...</span>
+                <span id="postRecordTimer" class="font-mono text-slate-300">00:00</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="cancelPostVoiceRecord()" class="px-2 py-1 rounded-lg bg-dark-800 text-slate-300">Cancel</button>
+                <button onclick="stopPostVoiceRecord()" class="px-2 py-1 rounded-lg bg-red-600 text-white font-bold">Done</button>
+              </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="pt-2 border-t border-dark-700/60 flex items-center justify-between">
+              <div class="flex items-center gap-1 sm:gap-2">
+                <button onclick="triggerPostImageUpload()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-dark-800 text-slate-400 hover:text-emerald-400 text-xs font-semibold transition-colors">
+                  <i class="fa-solid fa-image text-emerald-400 text-sm"></i>
+                  <span>Photo</span>
+                </button>
+                <input type="file" id="postFileInput" class="hidden" accept="image/*" onchange="handlePostImageSelect(event)">
+
+                <button onclick="startPostVoiceRecord()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-dark-800 text-slate-400 hover:text-red-400 text-xs font-semibold transition-colors">
+                  <i class="fa-solid fa-microphone text-red-400 text-sm"></i>
+                  <span>Voice</span>
+                </button>
+
+                <button onclick="openLiveCameraModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-dark-800 text-slate-400 hover:text-brand-400 text-xs font-semibold transition-colors">
+                  <i class="fa-solid fa-camera text-brand-400 text-sm"></i>
+                  <span>Camera</span>
+                </button>
+              </div>
+
+              <button onclick="publishNewPost()" class="px-4 py-2 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-md shadow-brand-600/30 transition-all flex items-center gap-1.5">
+                <span>Post</span>
+                <i class="fa-solid fa-paper-plane text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- FEED CONTAINER -->
+          <div id="postsFeedContainer" class="space-y-4"></div>
+
+        </div>
+      </section>
+
+
+      <!-- ==================== VIEW 2: MESSAGES & CHAT ==================== -->
+      <section id="page-chat" class="main-page flex-1 hidden h-full overflow-hidden relative">
+        <div class="flex h-full w-full relative">
+
+          <!-- CHAT SIDEBAR LIST WITH SEARCH BAR -->
+          <aside id="chatSidebar" class="mobile-panel w-full md:w-80 lg:w-88 bg-dark-900 border-r border-dark-700/60 flex flex-col flex-shrink-0 z-20 absolute md:relative h-full inset-0">
+            
+            <div class="p-4 border-b border-dark-700/60 flex items-center justify-between">
+              <h3 class="text-sm font-extrabold text-slate-100 flex items-center gap-2">
+                <span>Messages</span>
+                <span class="text-[10px] bg-brand-500/20 text-brand-400 px-2 py-0.5 rounded-full font-semibold">WebRTC</span>
+              </h3>
+              <button onclick="triggerIncomingCallSimulation()" class="p-2 rounded-xl bg-dark-800 hover:bg-dark-700 text-emerald-400 text-xs font-semibold transition-colors" title="Simulate Incoming Call">
+                <i class="fa-solid fa-phone-incoming"></i> Call Sim
+              </button>
+            </div>
+
+            <!-- IN-CHAT DEDICATED SEARCH BAR -->
+            <div class="p-3 bg-dark-900 border-b border-dark-700/40">
+              <div class="relative flex items-center">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 text-slate-500 text-xs"></i>
+                <input type="text" id="chatSearchInput" onkeyup="filterChatList()" placeholder="Search direct, groups, messages..." class="w-full pl-9 pr-8 py-2.5 text-xs rounded-2xl bg-dark-800 border border-dark-700/80 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 transition-all shadow-inner">
+                <button onclick="clearChatSearch()" id="clearChatSearchBtn" class="hidden absolute right-3 text-slate-500 hover:text-slate-300 text-xs">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex px-3 border-b border-dark-700/60 text-xs font-bold text-slate-400">
+              <button onclick="switchChatTab('direct')" id="chat-tab-direct" class="flex-1 py-2 text-center border-b-2 border-brand-500 text-slate-100">Directs</button>
+              <button onclick="switchChatTab('groups')" id="chat-tab-groups" class="flex-1 py-2 text-center border-b-2 border-transparent hover:text-slate-200">Groups</button>
+              <button onclick="switchChatTab('followers')" id="chat-tab-followers" class="flex-1 py-2 text-center border-b-2 border-transparent hover:text-slate-200">Followers</button>
+            </div>
+
+            <!-- Chat Items Container -->
+            <div class="flex-1 overflow-y-auto p-2 space-y-1" id="chatListContainer"></div>
+          </aside>
+
+          <!-- CHAT ROOM MAIN WINDOW -->
+          <main id="chatMainArea" class="mobile-panel mobile-panel-hidden-right md:mobile-panel-visible flex-1 flex flex-col h-full bg-dark-950 relative overflow-hidden z-10 w-full">
+            
+            <header class="p-3 px-4 bg-dark-900/90 backdrop-blur-md border-b border-dark-700/60 flex items-center justify-between z-20">
+              <div class="flex items-center gap-3">
+                <button onclick="showMobileChatSidebar()" class="md:hidden text-slate-300 hover:text-white p-1">
+                  <i class="fa-solid fa-arrow-left text-base"></i>
+                </button>
+                <div class="relative cursor-pointer" onclick="openActiveChatProfile()">
+                  <img id="activeChatAvatar" src="" class="w-10 h-10 rounded-2xl object-cover ring-2 ring-brand-500/30">
+                  <span id="activeChatOnlineDot" class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-dark-900 rounded-full"></span>
+                </div>
+                <div class="cursor-pointer" onclick="openActiveChatProfile()">
+                  <h3 id="activeChatName" class="text-xs sm:text-sm font-bold text-slate-100">Select Chat</h3>
+                  <p id="activeChatStatus" class="text-[10px] text-emerald-400 font-medium">Online</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-1.5">
+                <button onclick="startVoiceCall()" class="w-9 h-9 rounded-xl bg-dark-800 hover:bg-brand-600 text-slate-200 hover:text-white flex items-center justify-center transition-all">
+                  <i class="fa-solid fa-phone text-xs"></i>
+                </button>
+                <button onclick="startVideoCall()" class="w-9 h-9 rounded-xl bg-dark-800 hover:bg-brand-600 text-slate-200 hover:text-white flex items-center justify-center transition-all">
+                  <i class="fa-solid fa-video text-xs"></i>
+                </button>
+                <button onclick="openActiveChatProfile()" class="w-9 h-9 rounded-xl bg-dark-800 hover:bg-dark-700 text-slate-200 flex items-center justify-center">
+                  <i class="fa-solid fa-circle-info text-xs"></i>
+                </button>
+              </div>
+            </header>
+
+            <!-- Chat Messages Container -->
+            <div id="chatMessagesFeed" class="flex-1 overflow-y-auto p-4 space-y-3.5"></div>
+
+            <!-- Voice Recorder Bar -->
+            <div id="chatVoiceRecorderPanel" class="hidden px-4 py-3 bg-red-950/40 border-t border-red-800/40 flex items-center justify-between text-xs text-red-200 animate-pop">
+              <div class="flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full bg-red-500 recording-pulse"></div>
+                <span class="font-bold">Recording Voice Message...</span>
+                <span id="chatRecordTimer" class="font-mono text-slate-300">00:00</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="cancelChatVoiceRecord()" class="px-3 py-1 rounded-xl bg-dark-800 text-slate-300">Cancel</button>
+                <button onclick="stopAndSendChatVoiceRecord()" class="px-3 py-1 rounded-xl bg-red-600 text-white font-bold">Send</button>
+              </div>
+            </div>
+
+            <!-- Chat Input Controls -->
+            <div class="p-3 bg-dark-900 border-t border-dark-700/60 z-20">
+              <form onsubmit="sendChatMessage(event)" class="flex items-center gap-2 max-w-4xl mx-auto">
+                <button type="button" onclick="triggerChatFileUpload()" class="p-2.5 text-slate-400 hover:text-white rounded-xl hover:bg-dark-800 transition-colors">
+                  <i class="fa-solid fa-paperclip text-sm"></i>
+                </button>
+                <input type="file" id="chatFileInput" class="hidden" accept="image/*" onchange="handleChatFileUpload(event)">
+
+                <div class="flex-1 relative flex items-center">
+                  <input type="text" id="chatMessageInput" placeholder="Type a message..." class="w-full py-2.5 pl-4 pr-10 rounded-2xl bg-dark-800 border border-dark-700 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500">
+                  <button type="button" onclick="appendChatEmoji('🔥')" class="absolute right-3 text-slate-400 hover:text-slate-200">
+                    <i class="fa-regular fa-face-smile text-sm"></i>
+                  </button>
+                </div>
+
+                <button type="button" onclick="toggleChatVoiceRecord()" class="p-2.5 text-slate-400 hover:text-white rounded-xl hover:bg-dark-800 transition-colors">
+                  <i class="fa-solid fa-microphone text-base"></i>
+                </button>
+
+                <button type="submit" class="p-2.5 px-4 bg-brand-600 hover:bg-brand-500 text-white rounded-xl font-bold text-xs shadow-md transition-all flex items-center gap-1.5">
+                  <span>Send</span>
+                  <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                </button>
+              </form>
+            </div>
+          </main>
+
+        </div>
+      </section>
+
+
+      <!-- ==================== VIEW 3: EXPLORE & TRENDING ==================== -->
+      <section id="page-explore" class="main-page flex-1 hidden overflow-y-auto p-4 sm:p-6 max-w-5xl mx-auto w-full space-y-6">
+        <div class="glass-card p-6 rounded-3xl space-y-4">
+          <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
+            <i class="fa-solid fa-compass text-brand-500"></i> Explore & Discover
+          </h2>
+          <div class="relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+            <input type="text" placeholder="Search community, creators, or topics..." class="w-full pl-11 pr-4 py-3 rounded-2xl bg-dark-800 border border-dark-700 text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="glass-card p-5 rounded-3xl space-y-3">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Trending Topics</h3>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between p-2 rounded-2xl hover:bg-dark-800/60 cursor-pointer">
+                <div>
+                  <h4 class="text-xs font-bold text-slate-200">#PulseSocialPlatform</h4>
+                  <p class="text-[10px] text-slate-400">24.1k Posts • Tech</p>
+                </div>
+                <span class="text-xs font-bold text-emerald-400">+34%</span>
+              </div>
+              <div class="flex items-center justify-between p-2 rounded-2xl hover:bg-dark-800/60 cursor-pointer">
+                <div>
+                  <h4 class="text-xs font-bold text-slate-200">#WebRTCStream</h4>
+                  <p class="text-[10px] text-slate-400">12.8k Posts • Media</p>
+                </div>
+                <span class="text-xs font-bold text-emerald-400">+22%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card p-5 rounded-3xl space-y-3">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Suggested People</h3>
+            <div id="exploreSuggestedUsers" class="space-y-3"></div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==================== VIEW 4: NOTIFICATIONS ==================== -->
+      <section id="page-notifications" class="main-page flex-1 hidden overflow-y-auto p-4 sm:p-6 max-w-3xl mx-auto w-full space-y-4">
+        <div class="glass-card p-5 rounded-3xl flex items-center justify-between">
+          <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+            <i class="fa-solid fa-bell text-brand-500"></i> Notifications
+          </h2>
+          <button onclick="showToast('All notifications read')" class="text-xs font-bold text-brand-400 hover:underline">Mark all read</button>
+        </div>
+
+        <div class="space-y-2">
+          <div class="glass-card p-4 rounded-2xl flex items-center gap-3">
+            <div class="w-9 h-9 rounded-2xl bg-brand-500/20 text-brand-400 flex items-center justify-center font-bold text-sm">
+              <i class="fa-solid fa-heart"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-xs text-slate-200"><strong class="text-white">Alex Rivera</strong> liked your post.</p>
+              <span class="text-[10px] text-slate-500">2 minutes ago</span>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 rounded-2xl flex items-center gap-3">
+            <div class="w-9 h-9 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">
+              <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-xs text-slate-200"><strong class="text-white">Elena Rostron</strong> followed your profile.</p>
+              <span class="text-[10px] text-slate-500">1 hour ago</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==================== VIEW 5: PERSONAL USER PROFILE PAGE ==================== -->
+      <section id="page-my-profile" class="main-page flex-1 hidden overflow-y-auto p-3 sm:p-6 max-w-4xl mx-auto w-full space-y-5">
+        
+        <!-- Banner & Header Card -->
+        <div class="glass-card rounded-3xl overflow-hidden border border-dark-700/80">
+          <div class="h-36 sm:h-48 relative bg-dark-800">
+            <img id="myProfileBannerImg" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80" class="w-full h-full object-cover">
+            <button onclick="openEditProfileModal()" class="absolute top-3 right-3 px-3 py-1.5 rounded-xl bg-black/60 backdrop-blur-md text-white text-xs font-bold border border-white/20 hover:bg-black/80 transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-pen-to-square"></i> Modifier le profil
+            </button>
+          </div>
+
+          <div class="px-5 pb-5 pt-0 relative">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-12 sm:-mt-14 mb-4">
+              <div class="relative inline-block">
+                <img id="myProfileAvatarImg" src="" class="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover ring-4 ring-dark-900 border-2 border-brand-500 shadow-2xl bg-dark-900">
+                <span class="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-dark-900 rounded-full"></span>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button onclick="openEditProfileModal()" class="flex-1 sm:flex-none px-5 py-2.5 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                  <span>تعديل الملف الشخصي / Edit Profile</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Profile Info -->
+            <div class="space-y-2">
+              <h2 id="myProfileDisplayName" class="text-lg sm:text-xl font-extrabold text-white">Sarah Creator</h2>
+              <p id="myProfileHandle" class="text-xs font-bold text-brand-500">@sarah_creator</p>
+              <p id="myProfileBio" class="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">Software engineer & UI enthusiast building interactive real-time experiences.</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-3 mt-5 p-3.5 bg-dark-800/60 rounded-2xl border border-dark-700/50 text-center max-w-lg">
+              <div>
+                <span class="block text-sm font-extrabold text-slate-100">4.8k</span>
+                <span class="text-[10px] text-slate-400">Followers</span>
+              </div>
+              <div>
+                <span class="block text-sm font-extrabold text-slate-100">310</span>
+                <span class="text-[10px] text-slate-400">Following</span>
+              </div>
+              <div>
+                <span class="block text-sm font-extrabold text-amber-500">🔥 52</span>
+                <span class="text-[10px] text-slate-400">Streak</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Posts Feed Header -->
+        <div class="glass-card p-4 rounded-3xl flex items-center justify-between">
+          <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-grid-2 text-brand-500"></i> My Posts
+          </h3>
+          <span class="text-xs text-slate-400">Real-time updated</span>
+        </div>
+
+        <div id="myPersonalPostsContainer" class="space-y-4"></div>
+
+      </section>
+
+    </div>
+
+
+    <!-- ==================== MOBILE BOTTOM MENU ==================== -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-dark-900/95 backdrop-blur-md border-t border-dark-700/60 flex justify-around items-center px-2 z-40">
+      <button onclick="switchMainTab('feed')" id="mob-nav-feed" class="mob-nav-btn flex flex-col items-center gap-1 text-brand-500">
+        <i class="fa-solid fa-house text-base"></i>
+        <span class="text-[9px] font-bold">Feed</span>
+      </button>
+
+      <button onclick="switchMainTab('chat')" id="mob-nav-chat" class="mob-nav-btn flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200">
+        <div class="relative">
+          <i class="fa-solid fa-comments text-base"></i>
+          <span class="absolute -top-1 -right-1 w-2 h-2 bg-brand-500 rounded-full"></span>
+        </div>
+        <span class="text-[9px]">Chat</span>
+      </button>
+
+      <button onclick="switchMainTab('explore')" id="mob-nav-explore" class="mob-nav-btn flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200">
+        <i class="fa-solid fa-compass text-base"></i>
+        <span class="text-[9px]">Explore</span>
+      </button>
+
+      <button onclick="switchMainTab('notifications')" id="mob-nav-notifications" class="mob-nav-btn flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200">
+        <i class="fa-solid fa-bell text-base"></i>
+        <span class="text-[9px]">Alerts</span>
+      </button>
+
+      <button onclick="switchMainTab('my-profile')" id="mob-nav-my-profile" class="mob-nav-btn flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200">
+        <img id="mobNavUserAvatar" src="" class="w-5 h-5 rounded-full object-cover">
+        <span class="text-[9px]">Profile</span>
+      </button>
+    </nav>
+
+  </div>
+
+
+  <!-- ==================== EDIT PROFILE MODAL ==================== -->
+  <div id="editProfileModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-dark-900 border border-dark-700 rounded-3xl p-5 sm:p-6 space-y-5 shadow-2xl animate-pop relative max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-dark-700/60">
+        <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
+          <i class="fa-solid fa-user-pen text-brand-500"></i>
+          <span>Edit Profile / Modifier le profil / تعديل الملف الشخصي</span>
+        </h3>
+        <button onclick="closeEditProfileModal()" class="w-8 h-8 rounded-full bg-dark-800 text-slate-400 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="saveProfileChanges(event)" class="space-y-4 text-xs">
+        <!-- Live Avatar Preview & Upload -->
+        <div class="flex items-center gap-4">
+          <div class="relative">
+            <img id="editModalAvatarPreview" src="" class="w-16 h-16 rounded-2xl object-cover ring-2 ring-brand-500">
+            <button type="button" onclick="triggerAvatarUpload()" class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center text-[10px] shadow">
+              <i class="fa-solid fa-camera"></i>
+            </button>
+            <input type="file" id="editAvatarFileInput" class="hidden" accept="image/*" onchange="handleAvatarFileSelect(event)">
+          </div>
+          <div class="flex-1 space-y-1">
+            <label class="font-bold text-slate-300">Profile Picture URL</label>
+            <input type="text" id="editAvatarUrlInput" oninput="previewAvatarUrlChange(this.value)" placeholder="https://..." class="w-full px-3 py-2 rounded-xl bg-dark-800 border border-dark-700 text-slate-100 focus:outline-none focus:border-brand-500">
+          </div>
+        </div>
+
+        <!-- Full Display Name -->
+        <div class="space-y-1">
+          <label class="font-bold text-slate-300">Full Name (Display Name)</label>
+          <input type="text" id="editNameInput" required placeholder="e.g. Sarah Creator" class="w-full px-3.5 py-2.5 rounded-xl bg-dark-800 border border-dark-700 text-slate-100 focus:outline-none focus:border-brand-500">
+        </div>
+
+        <!-- Unique Public Handle -->
+        <div class="space-y-1">
+          <label class="font-bold text-slate-300">Public Handle / Username</label>
+          <input type="text" id="editUsernameInput" required placeholder="@sarah_creator" class="w-full px-3.5 py-2.5 rounded-xl bg-dark-800 border border-dark-700 text-slate-100 focus:outline-none focus:border-brand-500">
+        </div>
+
+        <!-- Custom Bio -->
+        <div class="space-y-1">
+          <label class="font-bold text-slate-300">Bio / Description</label>
+          <textarea id="editBioInput" rows="3" placeholder="Tell the community about yourself..." class="w-full px-3.5 py-2.5 rounded-xl bg-dark-800 border border-dark-700 text-slate-100 focus:outline-none focus:border-brand-500 resize-none"></textarea>
+        </div>
+
+        <!-- Banner URL -->
+        <div class="space-y-1">
+          <label class="font-bold text-slate-300">Cover Banner Image URL</label>
+          <input type="text" id="editBannerUrlInput" placeholder="https://..." class="w-full px-3.5 py-2.5 rounded-xl bg-dark-800 border border-dark-700 text-slate-100 focus:outline-none focus:border-brand-500">
+        </div>
+
+        <div class="pt-3 border-t border-dark-700/60 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeEditProfileModal()" class="px-4 py-2 rounded-xl bg-dark-800 text-slate-300 font-bold">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold shadow-md shadow-brand-600/30">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- INSTAGRAM STORY VIEWER MODAL -->
+  <div id="storyViewerModal" class="hidden fixed inset-0 z-50 bg-black/95 flex flex-col justify-between p-4 animate-pop">
+    <div class="space-y-3 z-10">
+      <div class="w-full bg-slate-800/80 h-1 rounded-full overflow-hidden">
+        <div id="storyProgressBar" class="bg-gradient-to-r from-brand-500 to-pink-500 h-full w-0 transition-all duration-100"></div>
+      </div>
+      <div class="flex items-center justify-between text-white">
+        <div class="flex items-center gap-3">
+          <img id="storyUserAvatar" src="" class="w-9 h-9 rounded-full object-cover ring-2 ring-brand-500">
+          <div>
+            <span id="storyUserName" class="text-xs font-bold block">User Story</span>
+            <span class="text-[10px] text-slate-400">2 hours ago</span>
+          </div>
+        </div>
+        <button onclick="closeStoryViewer()" class="w-8 h-8 rounded-full bg-dark-800 text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="relative flex-1 my-4 flex items-center justify-center overflow-hidden rounded-3xl">
+      <img id="storyImage" src="" class="max-h-full max-w-full rounded-2xl object-contain">
+    </div>
+
+    <div class="z-10 max-w-md mx-auto w-full">
+      <form onsubmit="sendStoryReply(event)" class="flex items-center gap-2">
+        <input type="text" id="storyReplyInput" placeholder="Send direct reply..." class="flex-1 py-2.5 px-4 rounded-2xl bg-dark-800 border border-dark-700 text-xs text-white placeholder-slate-400 focus:outline-none">
+        <button type="submit" class="p-2.5 bg-brand-600 text-white rounded-2xl text-xs font-bold">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- OTHER USER PROFILE DRAWER MODAL -->
+  <div id="userProfileDrawer" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-dark-900 border border-dark-700 rounded-3xl p-6 space-y-5 shadow-2xl animate-pop relative">
+      <button onclick="closeUserProfileDrawer()" class="absolute top-4 right-4 text-slate-400 hover:text-white w-8 h-8 rounded-full bg-dark-800 flex items-center justify-center">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="text-center space-y-3">
+        <div class="relative inline-block">
+          <img id="drawerAvatar" src="" class="w-24 h-24 rounded-3xl object-cover ring-4 ring-brand-500/30 mx-auto">
+          <span id="drawerBadge" class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-dark-900 rounded-full"></span>
+        </div>
+        <div>
+          <h3 id="drawerName" class="text-lg font-extrabold text-slate-100">User Name</h3>
+          <p id="drawerUsername" class="text-xs text-brand-500 font-semibold">@username</p>
+        </div>
+        <p id="drawerBio" class="text-xs text-slate-300 px-4 leading-relaxed">Profile description...</p>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 p-3 bg-dark-800/60 rounded-2xl border border-dark-700/50 text-center">
+        <div>
+          <span id="drawerFollowers" class="block text-sm font-extrabold text-slate-100">1.2k</span>
+          <span class="text-[10px] text-slate-400">Followers</span>
+        </div>
+        <div>
+          <span id="drawerFollowing" class="block text-sm font-extrabold text-slate-100">420</span>
+          <span class="text-[10px] text-slate-400">Following</span>
+        </div>
+        <div>
+          <span id="drawerStreak" class="block text-sm font-extrabold text-amber-500">🔥 34</span>
+          <span class="text-[10px] text-slate-400">Streak</span>
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button id="drawerFollowBtn" onclick="toggleDrawerFollowState()" class="flex-1 py-2.5 rounded-2xl bg-brand-600 hover:bg-brand-500 font-bold text-xs text-white shadow-md transition-all">
+          Follow User
+        </button>
+        <button onclick="startDirectFromDrawer()" class="flex-1 py-2.5 rounded-2xl bg-dark-800 hover:bg-dark-700 font-bold text-xs text-slate-200 border border-dark-700 transition-all">
+          Send Message
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- CAMERA MODAL -->
+  <div id="cameraModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col justify-between p-4 animate-pop">
+    <div class="flex justify-between items-center text-white z-10">
+      <span class="text-xs font-bold text-brand-400"><i class="fa-solid fa-camera"></i> Live Camera</span>
+      <button onclick="closeCameraModal()" class="w-8 h-8 rounded-full bg-dark-800 text-white flex items-center justify-center">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="relative flex-1 my-4 bg-dark-900 rounded-3xl overflow-hidden flex items-center justify-center">
+      <video id="cameraCaptureVideo" autoplay playsinline class="w-full h-full object-cover"></video>
+      <canvas id="cameraCanvas" class="hidden"></canvas>
+    </div>
+
+    <div class="flex justify-center pb-4 z-10">
+      <button onclick="takeSnapshotAndAttach()" class="w-16 h-16 rounded-full bg-white ring-4 ring-brand-500 flex items-center justify-center shadow-2xl hover:scale-105 transition-transform">
+        <div class="w-12 h-12 rounded-full bg-brand-600"></div>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- WEBRTC VIDEO CALL MODAL -->
+  <div id="videoCallModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col justify-between p-4 sm:p-6 animate-pop">
+    <div class="flex items-center justify-between text-white z-10">
+      <div class="flex items-center gap-3">
+        <img id="videoCallRemoteAvatar" src="" class="w-10 h-10 rounded-2xl object-cover border border-slate-700">
+        <div>
+          <h4 id="videoCallRemoteName" class="text-sm font-bold">User Name</h4>
+          <span class="text-[10px] text-emerald-400 font-mono">Connected • HD Live WebRTC Stream</span>
+        </div>
+      </div>
+      <span class="px-3 py-1 rounded-full bg-red-600/30 text-red-400 text-[10px] font-bold border border-red-500/30 flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> LIVE CAMERA
+      </span>
+    </div>
+
+    <div class="relative flex-1 my-4 bg-dark-900 rounded-3xl overflow-hidden border border-dark-700 flex items-center justify-center">
+      <div class="text-center space-y-3">
+        <img id="videoCallRemoteAvatarBig" src="" class="w-28 h-28 rounded-3xl object-cover mx-auto ring-4 ring-brand-500/40 animate-pulse">
+        <p class="text-xs text-slate-400">Live Video Stream Connected</p>
+      </div>
+      <video id="localVideo" autoplay playsinline muted class="absolute bottom-4 right-4 w-32 sm:w-48 h-44 sm:h-64 object-cover rounded-2xl border-2 border-brand-500 shadow-2xl bg-black"></video>
+    </div>
+
+    <div class="flex items-center justify-center gap-4 py-2 z-10">
+      <button onclick="toggleMuteMic()" class="w-12 h-12 rounded-2xl bg-dark-800 text-white flex items-center justify-center text-lg">
+        <i class="fa-solid fa-microphone"></i>
+      </button>
+      <button onclick="endActiveCall()" class="w-14 h-14 rounded-2xl bg-red-600 text-white flex items-center justify-center text-xl shadow-lg shadow-red-600/40 hover:scale-105 transition-transform">
+        <i class="fa-solid fa-phone-slash"></i>
+      </button>
+      <button onclick="toggleVideoCamera()" class="w-12 h-12 rounded-2xl bg-dark-800 text-white flex items-center justify-center text-lg">
+        <i class="fa-solid fa-video"></i>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- AUDIO CALL MODAL -->
+  <div id="audioCallModal" class="hidden fixed inset-0 z-50 bg-dark-950/95 backdrop-blur-md flex flex-col items-center justify-between p-8 text-center animate-pop">
+    <div class="space-y-4 mt-12">
+      <img id="audioCallAvatar" src="" class="w-28 h-28 rounded-3xl object-cover ring-4 ring-brand-500 animate-pulse mx-auto">
+      <div>
+        <h3 id="audioCallName" class="text-xl font-extrabold text-white">User Name</h3>
+        <p class="text-xs text-brand-400 font-mono mt-1">Live Audio Stream Connected...</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-6 mb-12">
+      <button onclick="endActiveCall()" class="w-16 h-16 rounded-2xl bg-red-600 text-white flex items-center justify-center text-2xl shadow-xl hover:scale-110 transition-transform">
+        <i class="fa-solid fa-phone-slash"></i>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-20 lg:bottom-6 right-6 bg-dark-800 border border-dark-700 text-white px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-semibold translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+    <i class="fa-solid fa-circle-info text-brand-500"></i>
+    <span id="toastText">Action completed</span>
+  </div>
+
+
+  <!-- ==================== JAVASCRIPT APPLICATION ENGINE ==================== -->
+  <script>
+    // LocalStorage Managed User Profile Database
+    const defaultMyProfile = {
+      id: 'user-me',
+      name: 'Sarah Creator',
+      username: '@sarah_creator',
+      bio: 'Software engineer & UI enthusiast building interactive real-time experiences.',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+      banner: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80',
+      followers: '4.8k',
+      following: '310',
+      streak: 52
+    };
+
+    let currentUser = JSON.parse(localStorage.getItem('pulse_user_profile')) || defaultMyProfile;
+
+    const usersData = {
+      'user-me': currentUser,
+      'alex': {
+        id: 'alex',
+        name: 'Alex Rivera',
+        username: '@alex_dev',
+        avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80',
+        bio: 'Senior Frontend Architect & WebRTC dev.',
+        followers: '3.1k',
+        following: '290',
+        streak: 34,
+        isFollowing: true,
+        online: true,
+        statusText: 'Active now',
+        storyImg: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80'
+      },
+      'elena': {
+        id: 'elena',
+        name: 'Elena Rostron',
+        username: '@elena_design',
+        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
+        bio: 'UI/UX Designer creating dark mode interfaces.',
+        followers: '5.8k',
+        following: '410',
+        streak: 12,
+        isFollowing: true,
+        online: true,
+        statusText: 'Active 15m ago',
+        storyImg: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=600&auto=format&fit=crop&q=80'
+      },
+      'sophia': {
+        id: 'sophia',
+        name: 'Sophia Chen',
+        username: '@sophia_c',
+        avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80',
+        bio: 'AI Researcher & Web developer.',
+        followers: '1.9k',
+        following: '95',
+        streak: 8,
+        isFollowing: false,
+        online: true,
+        statusText: 'Active now',
+        storyImg: 'https://images.unsplash.com/photo-1558655146-d09347e92766?w=600&auto=format&fit=crop&q=80'
+      },
+      'marcus': {
+        id: 'marcus',
+        name: 'Marcus Vance',
+        username: '@marcus_v',
+        avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100&auto=format&fit=crop&q=80',
+        bio: 'Fullstack node engineer.',
+        followers: '820',
+        following: '130',
+        streak: 0,
+        isFollowing: false,
+        online: false,
+        statusText: 'Offline',
+        storyImg: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop&q=80'
+      }
+    };
+
+    let postsData = [
+      {
+        id: 'post-1',
+        authorId: 'alex',
+        text: 'Just finished testing profile sync & live WebRTC streams on PulseSocial! What do you think? 🚀🔥',
+        image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80',
+        time: '10 minutes ago',
+        likes: 42,
+        isLiked: false,
+        comments: [
+          { authorId: 'elena', text: 'Looks ultra slick and fast!' }
+        ]
+      },
+      {
+        id: 'post-2',
+        authorId: 'user-me',
+        text: 'Welcome to my updated profile! Editing profiles, avatars, and usernames syncs instantly across the whole social platform.',
+        image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&auto=format&fit=crop&q=80',
+        time: '30 minutes ago',
+        likes: 89,
+        isLiked: true,
+        comments: []
+      }
+    ];
+
+    const chatRooms = {
+      'alex': {
+        type: 'private',
+        userId: 'alex',
+        messages: [
+          { sender: 'alex', text: 'Hey Sarah! Testing real camera video streams.', time: '10:40 AM' },
+          { sender: 'user-me', text: 'Awesome! It is fully responsive on mobile and PC.', time: '10:42 AM' }
+        ]
+      },
+      'elena': {
+        type: 'private',
+        userId: 'elena',
+        messages: [
+          { sender: 'elena', text: 'Check out the new design wireframes!', time: '09:15 AM' }
+        ]
+      },
+      'group-devs': {
+        type: 'group',
+        id: 'group-devs',
+        name: 'Developers Guild 💻',
+        subtitle: '128 members • 14 active',
+        messages: [
+          { sender: 'alex', text: 'Has everyone checked out the live chat search bar?', time: '10:10 AM' }
+        ]
+      }
+    };
+
+    // App State
+    let activeChatTab = 'direct';
+    let activeChatId = 'alex';
+    let currentDrawerUserId = null;
+    let selectedPostAttachment = null;
+    let localStream = null;
+    let activeStoryUserId = null;
+    let storyProgressInterval = null;
+
+    window.onload = function() {
+      syncUserProfileUI();
+      renderPostsFeed();
+      renderChatSidebarLists();
+      renderExploreUsers();
+      openChat('alex');
+    };
+
+    // Synchronize Profile Data across all UI Elements
+    function syncUserProfileUI() {
+      usersData['user-me'] = currentUser;
+
+      // Sidebar
+      document.getElementById('sidebarUserAvatar').src = currentUser.avatar;
+      document.getElementById('sidebarUserName').innerText = currentUser.name;
+      document.getElementById('sidebarUserHandle').innerText = currentUser.username;
+
+      // Mobile Header & Bottom Navigation
+      document.getElementById('mobileHeaderUserAvatar').src = currentUser.avatar;
+      document.getElementById('mobNavUserAvatar').src = currentUser.avatar;
+
+      // Post Creator
+      document.getElementById('feedPostCreatorAvatar').src = currentUser.avatar;
+
+      // Personal Profile Page
+      document.getElementById('myProfileAvatarImg').src = currentUser.avatar;
+      document.getElementById('myProfileBannerImg').src = currentUser.banner;
+      document.getElementById('myProfileDisplayName').innerText = currentUser.name;
+      document.getElementById('myProfileHandle').innerText = currentUser.username;
+      document.getElementById('myProfileBio').innerText = currentUser.bio;
+
+      // Re-render feeds to reflect updated author details
+      renderPostsFeed();
+      renderPersonalPosts();
+    }
+
+    // Profile Edit Modal Actions
+    function openEditProfileModal() {
+      document.getElementById('editNameInput').value = currentUser.name;
+      document.getElementById('editUsernameInput').value = currentUser.username;
+      document.getElementById('editBioInput').value = currentUser.bio;
+      document.getElementById('editAvatarUrlInput').value = currentUser.avatar;
+      document.getElementById('editBannerUrlInput').value = currentUser.banner;
+      document.getElementById('editModalAvatarPreview').src = currentUser.avatar;
+
+      document.getElementById('editProfileModal').classList.remove('hidden');
+    }
+
+    function closeEditProfileModal() {
+      document.getElementById('editProfileModal').classList.add('hidden');
+    }
+
+    function triggerAvatarUpload() {
+      document.getElementById('editAvatarFileInput').click();
+    }
+
+    function handleAvatarFileSelect(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        document.getElementById('editModalAvatarPreview').src = url;
+        document.getElementById('editAvatarUrlInput').value = url;
+      }
+    }
+
+    function previewAvatarUrlChange(url) {
+      if (url.trim()) {
+        document.getElementById('editModalAvatarPreview').src = url;
+      }
+    }
+
+    function saveProfileChanges(e) {
+      e.preventDefault();
+
+      currentUser.name = document.getElementById('editNameInput').value.trim();
+      let handle = document.getElementById('editUsernameInput').value.trim();
+      if (!handle.startsWith('@')) handle = '@' + handle;
+      currentUser.username = handle;
+      currentUser.bio = document.getElementById('editBioInput').value.trim();
+
+      const newAvatar = document.getElementById('editAvatarUrlInput').value.trim();
+      if (newAvatar) currentUser.avatar = newAvatar;
+
+      const newBanner = document.getElementById('editBannerUrlInput').value.trim();
+      if (newBanner) currentUser.banner = newBanner;
+
+      // Save to localStorage
+      localStorage.setItem('pulse_user_profile', JSON.stringify(currentUser));
+
+      syncUserProfileUI();
+      closeEditProfileModal();
+      showToast('Profile updated successfully!');
+    }
+
+    // Navigation Switcher
+    function switchMainTab(tab) {
+      document.querySelectorAll('.main-page').forEach(page => page.classList.add('hidden'));
+      document.getElementById(`page-${tab}`).classList.remove('hidden');
+
+      // Desktop Nav Styling
+      document.querySelectorAll('.desk-nav-btn').forEach(btn => {
+        btn.className = 'desk-nav-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-semibold text-xs text-slate-400 hover:bg-dark-800 hover:text-slate-100 transition-all';
+      });
+      const activeDeskBtn = document.getElementById(`desk-nav-${tab}`);
+      if (activeDeskBtn) {
+        activeDeskBtn.className = 'desk-nav-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-xs bg-brand-600 text-white shadow-md shadow-brand-600/20 transition-all';
+      }
+
+      // Mobile Nav Styling
+      document.querySelectorAll('.mob-nav-btn').forEach(btn => {
+        btn.className = 'mob-nav-btn flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200';
+      });
+      const activeMobBtn = document.getElementById(`mob-nav-${tab}`);
+      if (activeMobBtn) {
+        activeMobBtn.className = 'mob-nav-btn flex flex-col items-center gap-1 text-brand-500';
+      }
+
+      if (tab === 'my-profile') {
+        renderPersonalPosts();
+      }
+    }
+
+    // Render Posts Feed
+    function renderPostsFeed() {
+      const container = document.getElementById('postsFeedContainer');
+      container.innerHTML = '';
+
+      postsData.forEach(post => {
+        const author = usersData[post.authorId] || currentUser;
+        const card = document.createElement('div');
+        card.className = 'glass-card p-4 sm:p-5 rounded-3xl space-y-3.5 animate-pop';
+
+        let mediaHtml = '';
+        if (post.image) {
+          mediaHtml = `<img src="${post.image}" class="rounded-2xl w-full max-h-96 object-cover border border-dark-700">`;
+        }
+
+        const commentsHtml = post.comments.map(c => {
+          const cAuthor = usersData[c.authorId] || currentUser;
+          return `
+            <div class="flex items-start gap-2 text-xs">
+              <img src="${cAuthor.avatar}" class="w-6 h-6 rounded-lg object-cover">
+              <div class="bg-dark-800/80 px-3 py-1.5 rounded-xl border border-dark-700/60">
+                <span class="font-bold text-slate-200 mr-1">${cAuthor.name}:</span>
+                <span class="text-slate-300">${escapeHtml(c.text)}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        const isMe = author.id === 'user-me';
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="${isMe ? "switchMainTab('my-profile')" : `openUserProfileDrawer('${author.id}')`}">
+              <img src="${author.avatar}" class="w-10 h-10 rounded-2xl object-cover ring-2 ring-brand-500/30">
+              <div>
+                <h4 class="text-xs font-bold text-slate-100 flex items-center gap-1">
+                  ${author.name}
+                  ${author.streak > 0 ? `<span class="text-amber-500 text-[10px]">🔥 ${author.streak}</span>` : ''}
+                </h4>
+                <p class="text-[10px] text-slate-400">${post.time} • ${author.username}</p>
+              </div>
+            </div>
+            ${!isMe ? `
+              <button onclick="toggleFollowUser('${author.id}')" class="px-3 py-1 text-[11px] font-bold rounded-xl ${author.isFollowing ? 'bg-dark-800 text-slate-300' : 'bg-brand-600 text-white'}">
+                ${author.isFollowing ? 'Following' : 'Follow'}
+              </button>
+            ` : '<span class="text-[10px] text-brand-400 font-bold bg-brand-500/10 px-2 py-1 rounded-lg">You</span>'}
+          </div>
+
+          <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">${escapeHtml(post.text)}</p>
+
+          ${mediaHtml}
+
+          <div class="pt-2 border-t border-dark-700/60 flex items-center justify-between text-xs text-slate-400">
+            <button onclick="toggleLikePost('${post.id}')" class="flex items-center gap-1.5 font-semibold ${post.isLiked ? 'text-red-500' : 'hover:text-slate-200'}">
+              <i class="${post.isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-sm"></i>
+              <span>${post.likes} Likes</span>
+            </button>
+
+            <button onclick="toggleCommentsSection('${post.id}')" class="flex items-center gap-1.5 font-semibold hover:text-slate-200">
+              <i class="fa-regular fa-comment text-sm"></i>
+              <span>${post.comments.length} Comments</span>
+            </button>
+
+            <button onclick="showToast('Post link copied')" class="flex items-center gap-1.5 font-semibold hover:text-slate-200">
+              <i class="fa-regular fa-paper-plane text-sm"></i>
+              <span>Share</span>
+            </button>
+          </div>
+
+          <div id="comments-${post.id}" class="space-y-2 pt-2">
+            ${commentsHtml}
+            <div class="flex items-center gap-2 pt-1">
+              <input type="text" id="comment-input-${post.id}" placeholder="Write a comment..." class="flex-1 px-3 py-1.5 rounded-xl bg-dark-800 border border-dark-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none">
+              <button onclick="addCommentToPost('${post.id}')" class="px-3 py-1.5 bg-brand-600 text-white font-bold text-xs rounded-xl">Reply</button>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function renderPersonalPosts() {
+      const container = document.getElementById('myPersonalPostsContainer');
+      container.innerHTML = '';
+
+      const myPosts = postsData.filter(p => p.authorId === 'user-me');
+      if (myPosts.length === 0) {
+        container.innerHTML = `
+          <div class="glass-card p-8 text-center text-slate-500 text-xs rounded-3xl">
+            You haven't posted anything yet. Share your thoughts above!
+          </div>
+        `;
+        return;
+      }
+
+      myPosts.forEach(post => {
+        const card = document.createElement('div');
+        card.className = 'glass-card p-4 rounded-3xl space-y-3';
+        card.innerHTML = `
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span class="font-bold text-slate-200">${post.time}</span>
+            <span class="text-brand-400 font-bold">${post.likes} Likes</span>
+          </div>
+          <p class="text-xs text-slate-200">${escapeHtml(post.text)}</p>
+          ${post.image ? `<img src="${post.image}" class="rounded-2xl max-h-60 w-full object-cover">` : ''}
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Filter Chat Messages inside Message Section
+    function filterChatList() {
+      const input = document.getElementById('chatSearchInput');
+      const filter = input.value.toLowerCase().trim();
+      const clearBtn = document.getElementById('clearChatSearchBtn');
+
+      if (filter.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+
+      renderChatSidebarLists(filter);
+    }
+
+    function clearChatSearch() {
+      const input = document.getElementById('chatSearchInput');
+      input.value = '';
+      document.getElementById('clearChatSearchBtn').classList.add('hidden');
+      renderChatSidebarLists();
+    }
+
+    function switchChatTab(tab) {
+      activeChatTab = tab;
+      document.querySelectorAll('#chat-tab-direct, #chat-tab-groups, #chat-tab-followers').forEach(btn => {
+        btn.className = 'flex-1 py-2 text-center border-b-2 border-transparent hover:text-slate-200';
+      });
+      document.getElementById(`chat-tab-${tab}`).className = 'flex-1 py-2 text-center border-b-2 border-brand-500 text-slate-100 font-bold';
+      renderChatSidebarLists();
+    }
+
+    function renderChatSidebarLists(filterQuery = '') {
+      const container = document.getElementById('chatListContainer');
+      container.innerHTML = '';
+
+      let items = [];
+
+      if (activeChatTab === 'direct' || activeChatTab === 'followers') {
+        items = Object.keys(usersData)
+          .filter(id => id !== 'user-me')
+          .map(id => usersData[id])
+          .filter(user => {
+            if (activeChatTab === 'followers' && !user.isFollowing) return false;
+            if (!filterQuery) return true;
+            return user.name.toLowerCase().includes(filterQuery) || user.username.toLowerCase().includes(filterQuery);
+          });
+      } else if (activeChatTab === 'groups') {
+        items = Object.keys(chatRooms)
+          .filter(key => chatRooms[key].type === 'group')
+          .map(key => chatRooms[key])
+          .filter(group => {
+            if (!filterQuery) return true;
+            return group.name.toLowerCase().includes(filterQuery);
+          });
+      }
+
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-slate-500 text-xs">
+            <i class="fa-solid fa-comments text-2xl mb-2 block opacity-40"></i>
+            No chats matched search
+          </div>
+        `;
+        return;
+      }
+
+      items.forEach(item => {
+        const isGroup = activeChatTab === 'groups';
+        const itemId = isGroup ? item.id : item.id;
+        const name = isGroup ? item.name : item.name;
+        const sub = isGroup ? item.subtitle : item.statusText;
+        const avatar = isGroup ? 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=100&auto=format&fit=crop&q=80' : item.avatar;
+
+        const div = document.createElement('div');
+        div.onclick = () => openChat(itemId);
+        div.className = `flex items-center gap-3 p-2.5 rounded-2xl cursor-pointer hover:bg-dark-800 transition-all ${activeChatId === itemId ? 'bg-dark-800 border border-dark-700' : ''}`;
+
+        div.innerHTML = `
+          <div class="relative flex-shrink-0" onclick="event.stopPropagation(); ${!isGroup ? `openUserProfileDrawer('${item.id}')` : ''}">
+            <img src="${avatar}" class="w-10 h-10 rounded-2xl object-cover ring-2 ring-brand-500/20">
+            ${!isGroup ? `<span class="absolute bottom-0 right-0 w-3 h-3 ${item.online ? 'bg-emerald-500' : 'bg-slate-500'} border-2 border-dark-900 rounded-full"></span>` : ''}
+          </div>
+          <div class="flex-1 min-w-0">
+            <h4 class="text-xs font-bold text-slate-100 truncate">${name}</h4>
+            <p class="text-[10px] text-slate-400 truncate">${sub}</p>
+          </div>
+        `;
+
+        container.appendChild(div);
+      });
+    }
+
+    function openChat(id) {
+      activeChatId = id;
+      renderChatSidebarLists(document.getElementById('chatSearchInput').value.toLowerCase().trim());
+
+      const chat = chatRooms[id] || { type: 'private', userId: id, messages: [] };
+      const user = usersData[chat.userId] || { name: chat.name || 'Chat Room', avatar: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=100&auto=format&fit=crop&q=80', statusText: 'Online' };
+
+      document.getElementById('activeChatName').innerText = user.name;
+      document.getElementById('activeChatStatus').innerText = user.statusText || 'Active';
+      document.getElementById('activeChatAvatar').src = user.avatar;
+
+      renderChatMessages();
+
+      if (window.innerWidth < 768) {
+        document.getElementById('chatSidebar').classList.add('mobile-panel-hidden-left');
+        document.getElementById('chatMainArea').classList.remove('mobile-panel-hidden-right');
+      }
+    }
+
+    function showMobileChatSidebar() {
+      document.getElementById('chatSidebar').classList.remove('mobile-panel-hidden-left');
+      document.getElementById('chatMainArea').classList.add('mobile-panel-hidden-right');
+    }
+
+    function renderChatMessages() {
+      const feed = document.getElementById('chatMessagesFeed');
+      feed.innerHTML = '';
+
+      const chat = chatRooms[activeChatId] || { messages: [] };
+      chat.messages.forEach(msg => {
+        const isMe = msg.sender === 'user-me';
+        const sender = usersData[msg.sender] || currentUser;
+
+        const div = document.createElement('div');
+        div.className = `flex items-end gap-2 max-w-sm ${isMe ? 'ml-auto justify-end' : ''} animate-pop`;
+
+        let content = `<div class="p-3 rounded-2xl ${isMe ? 'bg-brand-600 text-white rounded-br-xs' : 'bg-dark-800 text-slate-100 border border-dark-700 rounded-bl-xs'} text-xs leading-relaxed">${escapeHtml(msg.text)}</div>`;
+
+        div.innerHTML = `
+          ${!isMe ? `<img src="${sender.avatar}" class="w-7 h-7 rounded-xl object-cover mb-1">` : ''}
+          <div>
+            ${content}
+            <span class="text-[9px] text-slate-500 mt-0.5 block ${isMe ? 'text-right' : ''}">${msg.time}</span>
+          </div>
+        `;
+        feed.appendChild(div);
+      });
+
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    function sendChatMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('chatMessageInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      if (!chatRooms[activeChatId]) {
+        chatRooms[activeChatId] = { type: 'private', userId: activeChatId, messages: [] };
+      }
+
+      chatRooms[activeChatId].messages.push({
+        sender: 'user-me',
+        text: text,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      });
+
+      input.value = '';
+      renderChatMessages();
+    }
+
+    // WebRTC Live Calls
+    async function startVideoCall() {
+      const user = usersData[activeChatId] || { name: 'User', avatar: '' };
+      document.getElementById('videoCallRemoteName').innerText = user.name;
+      document.getElementById('videoCallRemoteAvatar').src = user.avatar;
+      document.getElementById('videoCallRemoteAvatarBig').src = user.avatar;
+      document.getElementById('videoCallModal').classList.remove('hidden');
+
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        document.getElementById('localVideo').srcObject = localStream;
+      } catch (err) {
+        showToast('Camera & mic permissions required');
+      }
+    }
+
+    function startVoiceCall() {
+      const user = usersData[activeChatId] || { name: 'User', avatar: '' };
+      document.getElementById('audioCallName').innerText = user.name;
+      document.getElementById('audioCallAvatar').src = user.avatar;
+      document.getElementById('audioCallModal').classList.remove('hidden');
+    }
+
+    function endActiveCall() {
+      if (localStream) {
+        localStream.getTracks().forEach(t => t.stop());
+        localStream = null;
+      }
+      document.getElementById('videoCallModal').classList.add('hidden');
+      document.getElementById('audioCallModal').classList.add('hidden');
+      showToast('Call ended');
+    }
+
+    // Instagram Story Viewer Actions
+    function openStoryViewer(userId) {
+      activeStoryUserId = userId;
+      const user = usersData[userId];
+      if (user && user.storyImg) {
+        document.getElementById('storyUserAvatar').src = user.avatar;
+        document.getElementById('storyUserName').innerText = user.name;
+        document.getElementById('storyImage').src = user.storyImg;
+        document.getElementById('storyViewerModal').classList.remove('hidden');
+
+        let progress = 0;
+        const bar = document.getElementById('storyProgressBar');
+        bar.style.width = '0%';
+
+        if (storyProgressInterval) clearInterval(storyProgressInterval);
+        storyProgressInterval = setInterval(() => {
+          progress += 2;
+          bar.style.width = `${progress}%`;
+          if (progress >= 100) {
+            clearInterval(storyProgressInterval);
+            closeStoryViewer();
+          }
+        }, 100);
+      }
+    }
+
+    function closeStoryViewer() {
+      if (storyProgressInterval) clearInterval(storyProgressInterval);
+      document.getElementById('storyViewerModal').classList.add('hidden');
+    }
+
+    function sendStoryReply(e) {
+      e.preventDefault();
+      const input = document.getElementById('storyReplyInput');
+      const text = input.value.trim();
+      if (!text || !activeStoryUserId) return;
+
+      if (!chatRooms[activeStoryUserId]) {
+        chatRooms[activeStoryUserId] = { type: 'private', userId: activeStoryUserId, messages: [] };
+      }
+
+      chatRooms[activeStoryUserId].messages.push({
+        sender: 'user-me',
+        text: `[Story Reply] ${text}`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      });
+
+      input.value = '';
+      closeStoryViewer();
+      showToast('Story reply sent to chat!');
+    }
+
+    // Drawer User Profile
+    function openUserProfileDrawer(userId) {
+      currentDrawerUserId = userId;
+      const user = usersData[userId];
+      if (!user) return;
+
+      document.getElementById('drawerAvatar').src = user.avatar;
+      document.getElementById('drawerName').innerText = user.name;
+      document.getElementById('drawerUsername').innerText = user.username;
+      document.getElementById('drawerBio').innerText = user.bio;
+      document.getElementById('drawerFollowers').innerText = user.followers;
+      document.getElementById('drawerFollowing').innerText = user.following;
+
+      const btn = document.getElementById('drawerFollowBtn');
+      btn.innerText = user.isFollowing ? 'Following' : 'Follow User';
+
+      document.getElementById('userProfileDrawer').classList.remove('hidden');
+    }
+
+    function closeUserProfileDrawer() {
+      document.getElementById('userProfileDrawer').classList.add('hidden');
+    }
+
+    function toggleDrawerFollowState() {
+      if (currentDrawerUserId) {
+        const user = usersData[currentDrawerUserId];
+        user.isFollowing = !user.isFollowing;
+        openUserProfileDrawer(currentDrawerUserId);
+        renderPostsFeed();
+        showToast(user.isFollowing ? `Followed ${user.name}` : `Unfollowed ${user.name}`);
+      }
+    }
+
+    function toggleFollowUser(userId) {
+      const user = usersData[userId];
+      user.isFollowing = !user.isFollowing;
+      renderPostsFeed();
+      showToast(user.isFollowing ? `Followed ${user.name}` : `Unfollowed ${user.name}`);
+    }
+
+    function startDirectFromDrawer() {
+      closeUserProfileDrawer();
+      if (currentDrawerUserId && currentDrawerUserId !== 'user-me') {
+        switchMainTab('chat');
+        openChat(currentDrawerUserId);
+      }
+    }
+
+    // Post Creation & Attachment Actions
+    function toggleLikePost(postId) {
+      const post = postsData.find(p => p.id === postId);
+      if (post) {
+        post.isLiked = !post.isLiked;
+        post.likes += post.isLiked ? 1 : -1;
+        renderPostsFeed();
+      }
+    }
+
+    function addCommentToPost(postId) {
+      const input = document.getElementById(`comment-input-${postId}`);
+      const text = input.value.trim();
+      if (!text) return;
+
+      const post = postsData.find(p => p.id === postId);
+      if (post) {
+        post.comments.push({ authorId: 'user-me', text: text });
+        renderPostsFeed();
+      }
+    }
+
+    function triggerPostImageUpload() {
+      document.getElementById('postFileInput').click();
+    }
+
+    function handlePostImageSelect(e) {
+      const file = e.target.files[0];
+      if (file) {
+        selectedPostAttachment = URL.createObjectURL(file);
+        document.getElementById('postAttachmentImg').src = selectedPostAttachment;
+        document.getElementById('postAttachmentPreview').classList.remove('hidden');
+      }
+    }
+
+    function removePostAttachment() {
+      selectedPostAttachment = null;
+      document.getElementById('postAttachmentPreview').classList.add('hidden');
+    }
+
+    function publishNewPost() {
+      const text = document.getElementById('postInputText').value.trim();
+      if (!text && !selectedPostAttachment) return;
+
+      postsData.unshift({
+        id: 'post-' + Date.now(),
+        authorId: 'user-me',
+        text: text,
+        image: selectedPostAttachment,
+        time: 'Just now',
+        likes: 0,
+        isLiked: false,
+        comments: []
+      });
+
+      document.getElementById('postInputText').value = '';
+      removePostAttachment();
+      renderPostsFeed();
+      renderPersonalPosts();
+      showToast('Post published!');
+    }
+
+    // Live Camera Snapshot
+    async function openLiveCameraModal() {
+      document.getElementById('cameraModal').classList.remove('hidden');
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        document.getElementById('cameraCaptureVideo').srcObject = localStream;
+      } catch (err) {
+        showToast('Camera access required');
+      }
+    }
+
+    function closeCameraModal() {
+      if (localStream) {
+        localStream.getTracks().forEach(t => t.stop());
+        localStream = null;
+      }
+      document.getElementById('cameraModal').classList.add('hidden');
+    }
+
+    function takeSnapshotAndAttach() {
+      const video = document.getElementById('cameraCaptureVideo');
+      const canvas = document.getElementById('cameraCanvas');
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      selectedPostAttachment = canvas.toDataURL('image/jpeg');
+      document.getElementById('postAttachmentImg').src = selectedPostAttachment;
+      document.getElementById('postAttachmentPreview').classList.remove('hidden');
+
+      closeCameraModal();
+      showToast('Snapshot attached');
+    }
+
+    // Render Explore Users
+    function renderExploreUsers() {
+      const container = document.getElementById('exploreSuggestedUsers');
+      container.innerHTML = Object.keys(usersData)
+        .filter(id => id !== 'user-me')
+        .map(id => {
+          const user = usersData[id];
+          return `
+            <div class="flex items-center justify-between p-2 rounded-2xl hover:bg-dark-800/60 cursor-pointer" onclick="openUserProfileDrawer('${user.id}')">
+              <div class="flex items-center gap-3">
+                <img src="${user.avatar}" class="w-9 h-9 rounded-xl object-cover">
+                <div>
+                  <h5 class="text-xs font-bold text-slate-200">${user.name}</h5>
+                  <p class="text-[10px] text-slate-400">${user.username}</p>
+                </div>
+              </div>
+              <button onclick="event.stopPropagation(); toggleFollowUser('${user.id}')" class="px-3 py-1 rounded-xl bg-brand-600 text-white font-bold text-xs">Follow</button>
+            </div>
+          `;
+        }).join('');
+    }
+
+    function escapeHtml(text) {
+      return text ? text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : '';
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastText').innerText = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2200);
+    }
+  </script>
+</body>
+</html>
